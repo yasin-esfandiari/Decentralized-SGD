@@ -19,8 +19,8 @@
  It has been successfully applied in recommendation system (users and items) or news personalization (users and articles) \cite{gemulla11}.
  In production systems, matrices with millions of rows and columns can be involved \cite{das07}.
  Therefore, efficient algorithms that approximate the solution in a reasonable time need to be implemented, often leveraging distributed computing \cite{liu10, das07}.
- In this work, one such algorithm using distributed stochastic gradient descent is implemented and analyzed \cite{gemulla11}.
- Moreover, a general analysis of distributed SGD behavior is presented \cite{zhang17,yu21,ahn15,swenson20}.
+ In this work, one such algorithm using distributed stochastic gradient descent \cite{gemulla11} is implemented in PySpark \cite{ZahariaXinEtAl16cacm} and analyzed. The analysis covers convergence time of the recommendation system task for different number of GPU nodes, on available datasets like Netflix \cite{Bennett07thenetflix}.
+ Moreover, a general analysis of distributed SGD behavior is presented \cite{zhang17,yu21,ahn15,swenson20}. 
 \end{abstract}
 
 %% ORIGINAL TEMPLATE FOLLOWS %%
@@ -299,3 +299,4 @@
 \bibliographystyle{IEEEtran}
 \bibliography{literature}
 \end{document}
+
