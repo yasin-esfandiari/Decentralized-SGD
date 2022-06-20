@@ -1,6 +1,8 @@
 import math
 import numpy as np
 import multiprocessing as mp
+import sys
+import matplotlib.pyplot as plt
 
 # SGD update paremeters - need to be global so that SGD_update
 # can be run in paralel
@@ -51,12 +53,28 @@ def L2_loss(V, W, H):
 
     return sum
 
+def plotter(losses):
+    epochs = np.arange(1, len(losses)+1)
+    plt.plot(epochs, losses, label='Training Loss')
 
-def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, beta=0.02):
+    # plt.xticks(epochs)
+    # plt.yticks(np.arange(np.max(losses)+5, np.min(losses)-5, 500))
+    plt.xlabel('Epochs')
+    plt.ylabel('Losses')
+    plt.legend()
+
+    plt.show()
+    plt.savefig("plot.png")
+
+
+def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, beta=0.02, patience=5):
     # Set SGD update parameters
     global ALPHA, BETA
     ALPHA = alpha
     BETA = beta
+    counter = 0 # Early stopping counter
+    best_loss = sys.maxsize # initialization for the max possible int value for loss
+    losses = [] # keep track of the losses
 
     m, n = V.shape
 
@@ -130,3 +148,17 @@ def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, be
             # For now, print the L2 loss to terminal only
             loss = L2_loss(V, W_new, H_new)
             print(f"Iteration: {iterations}/{max_iterations}\tLoss: {loss:.4f}")
+
+            if loss < best_loss:
+                best_loss = loss
+                counter = 0
+                losses.append(loss)
+            else:
+                counter += 1
+                print('loss at patience level ', counter, ' is ', loss)
+                if (counter == patience):
+                    print("Early stopping with best loss : ", best_loss, f" for the iteration ({iterations-counter}): ")
+                    break
+            
+    return losses
+
