@@ -53,9 +53,12 @@ def L2_loss(V, W, H):
 
     return sum
 
-def plotter(losses):
+
+def plotter(losses, out_dir, id):
     epochs = np.arange(1, len(losses)+1)
-    plt.plot(epochs, losses, label='Training Loss')
+
+    fig, ax = plt.subplots()
+    ax.plot(epochs, losses, label='Training Loss')
 
     # plt.xticks(epochs)
     # plt.yticks(np.arange(np.max(losses)+5, np.min(losses)-5, 500))
@@ -63,8 +66,8 @@ def plotter(losses):
     plt.ylabel('Losses')
     plt.legend()
 
-    plt.show()
-    plt.savefig("plot.png")
+    # plt.show()
+    fig.savefig(f"{out_dir}/{id}_loss.png")
 
 
 def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, beta=0.02, patience=5):
@@ -72,9 +75,9 @@ def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, be
     global ALPHA, BETA
     ALPHA = alpha
     BETA = beta
-    counter = 0 # Early stopping counter
-    best_loss = sys.maxsize # initialization for the max possible int value for loss
-    losses = [] # keep track of the losses
+    counter = 0  # Early stopping counter
+    best_loss = sys.maxsize  # initialization for the max possible int value for loss
+    losses = []  # keep track of the losses
 
     m, n = V.shape
 
@@ -149,6 +152,10 @@ def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, be
             loss = L2_loss(V, W_new, H_new)
             print(f"Iteration: {iterations}/{max_iterations}\tLoss: {loss:.4f}")
 
+            if np.isinf(loss):
+                print("Algorithm diverged")
+                return False, losses
+
             if loss < best_loss:
                 best_loss = loss
                 counter = 0
@@ -159,6 +166,5 @@ def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, be
                 if (counter == patience):
                     print("Early stopping with best loss : ", best_loss, f" for the iteration ({iterations-counter}): ")
                     break
-            
-    return losses
 
+    return True, losses

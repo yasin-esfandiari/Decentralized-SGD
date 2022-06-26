@@ -1,0 +1,7 @@
+Matrix was created using Matlab:
+```
+P = rand(16,2);
+Q = rand(16,2)';
+Y = P*Q;
+rk = rank(Y);
+```
