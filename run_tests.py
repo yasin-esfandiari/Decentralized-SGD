@@ -21,7 +21,7 @@ PATIENCE = 5  # hold on to early stop
 
 # Run the tests
 for WORKERS in (1, 2, 4, 8):
-    for ALPHA in (0.1, 0.01, 0.001):
+    for ALPHA in (0.01, 0.001, 0.0001):
         # Create result folder
         out_dir = f"{root_result_dir}/{WORKERS}/{ALPHA}/"
         os.makedirs(out_dir, exist_ok=True)
