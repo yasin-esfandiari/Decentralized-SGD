@@ -68,6 +68,7 @@ def plotter(losses, out_dir, id):
 
     # plt.show()
     fig.savefig(f"{out_dir}/{id}_loss.png")
+    plt.close()
 
 
 def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, beta=0.02, patience=5):
@@ -114,7 +115,7 @@ def DSGD(V, W0, H0, factors, workers=1, d=1, max_iterations=100, alpha=0.002, be
                 # Get the indices of substrata forming the current stratum
                 # The index calculation for 'cols' will create an alternating
                 # pattern, that ensures the substrata are interchangeable
-                # After 'workers' steps, the strata will cover the whole
+                # After 'd' steps, the strata will cover the whole
                 # training set
                 # Example:
                 #   k=0           k=1           k=2

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import argparse
 
 from src.dsgd import DSGD, plotter
 from timeit import default_timer as timer
@@ -29,9 +30,14 @@ def main(dataset, iterations, factors, workers, d, alpha, beta, patience, out_di
         m = df["user_id"].max()
         n = df["item_id"].max()
 
+        nz = 0
         V = np.zeros((m, n))
         for row in df.itertuples():
+            nz += 1
             V[row[1] - 1, row[2] - 1] = row[3]
+
+        print(m, n, nz)
+        exit(0)
         # End of MovieLens dataset loading
 
     elif dataset == "small":
@@ -72,6 +78,21 @@ def main(dataset, iterations, factors, workers, d, alpha, beta, patience, out_di
 
 
 if __name__ == "__main__":
-    main(dataset=DATASET, iterations=ITERATIONS, factors=FACTORS,
-         workers=WORKERS, d=D, alpha=ALPHA, beta=BETA, patience=PATIENCE,
-         out_dir="./", id=0)
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--data', type=str, default=DATASET)
+    parser.add_argument('--iter', type=int, default=ITERATIONS)
+    parser.add_argument('--factors', type=int, default=FACTORS)
+    parser.add_argument('--workers', type=int, default=WORKERS)
+    parser.add_argument('-d', type=int, default=D)
+    parser.add_argument('--alpha', type=float, default=ALPHA)
+    parser.add_argument('--beta', type=float, default=BETA)
+    parser.add_argument('--patience', type=int, default=PATIENCE)
+    parser.add_argument('--out_dir', type=str, default="./")
+    parser.add_argument('--id', type=int, default=0)
+
+    args = parser.parse_args()
+
+    main(dataset=args.data, iterations=args.iter, factors=args.factors,
+         workers=args.workers, d=args.d, alpha=args.alpha, beta=args.beta,
+         patience=args.patience, out_dir=args.out_dir, id=args.id)
